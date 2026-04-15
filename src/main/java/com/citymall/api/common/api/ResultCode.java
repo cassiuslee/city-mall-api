@@ -1,12 +1,32 @@
 package com.citymall.api.common.api;
 
 /**
- * @author cqkir
+ * 统一业务状态码
  */
 public interface ResultCode {
-    Integer SUCCESS = 200;
-    Integer FAIL = 500;
-    Integer VALIDATE_FAILED = 400;
-    Integer UNAUTHORIZED = 401;
-    Integer FORBIDDEN = 403;
+
+    /**
+     * 成功
+     */
+    String SUCCESS = "1";
+
+    /**
+     * 通用失败
+     */
+    String FAIL = "0";
+
+    /**
+     * 参数错误
+     */
+    String VALIDATE_FAILED = "400";
+
+    /**
+     * 未登录
+     */
+    String UNAUTHORIZED = "401";
+
+    /**
+     * 无权限
+     */
+    String FORBIDDEN = "403";
 }
