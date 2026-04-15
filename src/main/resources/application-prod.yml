@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/city_mall_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: city_mall_db
+    password: nMrHn2fhabAmCtbB
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 2
+      timeout: 5s
+      password: 123456

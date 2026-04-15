@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.citymall.api.module.customer.mapper.MemberUserMapper">
+
+    <select id="selectMemberUserInfoByUserId"
+            parameterType="com.citymall.api.module.customer.dto.MemberUserInfoQueryDTO"
+            resultType="com.citymall.api.module.customer.vo.MemberUserInfoRowVO">
+        SELECT u.f_id                AS fId,
+               u.c_status            AS cStatus,
+               u.user_id             AS userId,
+               u.mobile              AS mobile,
+               u.nickname            AS nickname,
+               u.avatar              AS avatar,
+               u.gender              AS gender,
+               u.openid              AS openid,
+               u.union_id            AS unionId,
+
+               r.f_id                AS relationId,
+               r.market_fid          AS marketFid,
+               r.member_identity     AS memberIdentity,
+
+               m.c_status            AS marketCStatus,
+               m.mark_code           AS markCode,
+               m.mark_name           AS markName,
+               m.mark_type           AS markType,
+               t.market_type_name    AS marketTypeName,
+               m.qywx_dpt_id         AS weworkDptId,
+               m.qywx_dpt_name       AS weworkDptName,
+               m.sales_company_id    AS salesCompanyId,
+               m.regional_manager_id AS regionalManagerId,
+               m.service_manager     AS serviceManager
+        FROM member_user u
+                 LEFT JOIN member_relation r
+                           ON r.member_fid = u.f_id
+                               AND (r.f_delete_mark = 0 OR r.f_delete_mark IS NULL)
+                 LEFT JOIN market_entity_info m
+                           ON m.f_id = r.market_fid
+                               AND (m.f_delete_mark = 0 OR m.f_delete_mark IS NULL)
+                 LEFT JOIN market_types t
+                           ON t.en_code = m.mark_type
+                               AND (t.f_delete_mark = 0 OR t.f_delete_mark IS NULL)
+        WHERE (u.f_delete_mark = 0 OR u.f_delete_mark IS NULL)
+          AND u.user_id = #{query.userId}
+        ORDER BY u.f_creator_time DESC, r.f_creator_time DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,511 @@
+@startuml
+' Generated from city-mall-api/db/migration/V3__init_schema.sql
+hide circle
+skinparam linetype ortho
+
+entity "cart_item" as cart_item {
+  *f_id : varchar(50) 主键
+  +member_id : varchar(50) 用户ID
+  +product_id : varchar(50) 商品ID
+  +sku_id : varchar(50) 备注: SKU ID
+  name : varchar(128) 商品名称快照
+  picture : varchar(255) 商品图片快照
+  count : int unsigned 数量
+  price : decimal(10, 2) 加入时价格
+  now_price : decimal(10, 2) 当前价格
+  stock : int unsigned 当前库存
+  selected : tinyint(1) 是否选中
+  attrs_text : varchar(255) 规格文案
+  is_effective : tinyint(1) 是否有效商品
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "category" as category {
+  *f_id : varchar(50) 主键
+  +parent_id : varchar(50) 父分类ID，一级分类为0
+  name : varchar(64) 分类名称
+  icon : varchar(255) 分类图标
+  picture : varchar(255) 分类图片
+  level : tinyint unsigned 层级：1一级 2二级
+  sort_order : int 排序值
+  is_show : tinyint(1) 是否展示
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "cms_banner" as cms_banner {
+  *f_id : varchar(50) 主键
+  title : varchar(255) 标题
+  distribution_site : tinyint 投放位置：1首页 2分类页
+  img_url : varchar(255) 图片地址
+  href_url : varchar(255) 跳转地址
+  c_type : tinyint 跳转类型
+  +product_id : varchar(50) 关联商品ID
+  +category_id : varchar(50) 关联分类ID
+  is_show : tinyint 是否展示
+  f_sort_code : bigint 排序码
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "cms_hot_zone" as cms_hot_zone {
+  *f_id : varchar(50) 主键
+  code : varchar(32) 专区编码
+  title : varchar(64) 标题
+  alt : varchar(128) 副标题
+  target : varchar(128) 跳转目标
+  type : varchar(32) 业务类型
+  banner_picture : varchar(255) 热门页封面
+  pictures : json 首页热门图集
+  sort_order : int 排序
+  is_show : tinyint(1) 是否展示
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "cms_hot_zone_item" as cms_hot_zone_item {
+  *f_id : varchar(50) 主键
+  +hot_zone_id : varchar(50) 专区ID
+  sub_type : varchar(32) 子分组编码
+  sub_title : varchar(64) 子分组标题
+  +product_id : varchar(50) 商品ID
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "member_address" as member_address {
+  *f_id : varchar(50) 主键
+  +member_id : varchar(50) 用户ID
+  receiver : varchar(64) 收货人
+  contact : varchar(20) 联系方式
+  province_code : varchar(20) 省编码
+  city_code : varchar(20) 市编码
+  county_code : varchar(20) 区县编码
+  full_location : varchar(255) 省市区文案
+  address : varchar(255) 详细地址
+  is_default : tinyint(1) 是否默认地址
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "member_user" as member_user {
+  *f_id : varchar(50) 主键
+  account : varchar(64) 账号
+  password_hash : varchar(255) 密码哈希
+  mobile : varchar(20) 手机号
+  nickname : varchar(64) 昵称
+  avatar : varchar(255) 头像
+  gender : varchar(16) 性别
+  birthday : date 生日
+  profession : varchar(64) 职业
+  province_code : varchar(20) 省编码
+  city_code : varchar(20) 市编码
+  county_code : varchar(20) 区县编码
+  full_location : varchar(255) 省市区文案
+  openid : varchar(64) 微信OpenID
+  union_id : varchar(64) 微信UnionID
+  status : tinyint unsigned 状态
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "order_info" as order_info {
+  *f_id : varchar(50) 主键
+  +member_id : varchar(50) 用户ID
+  order_state : tinyint unsigned 订单状态
+  pay_type : tinyint unsigned 支付方式
+  pay_channel : tinyint unsigned 支付渠道
+  delivery_time_type : tinyint unsigned 配送时间类型
+  buyer_message : varchar(255) 买家留言
+  total_num : int unsigned 商品总数
+  total_money : decimal(10, 2) 商品总额
+  post_fee : decimal(10, 2) 运费
+  pay_money : decimal(10, 2) 实付金额
+  receiver_contact : varchar(64) 收货人
+  receiver_mobile : varchar(20) 收货手机号
+  receiver_address : varchar(255) 收货地址全文
+  pay_latest_time : datetime(3) 最晚支付时间
+  pay_time : datetime(3) 支付时间
+  consign_time : datetime(3) 发货时间
+  receipt_time : datetime(3) 确认收货时间
+  end_time : datetime(3) 完成时间
+  close_time : datetime(3) 关闭时间
+  cancel_reason : varchar(255) 取消原因
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "order_item" as order_item {
+  *f_id : varchar(50) 主键
+  +order_id : varchar(50) 订单ID
+  +product_id : varchar(50) 商品ID
+  +sku_id : varchar(50) 备注: SKU ID
+  name : varchar(128) 商品名称快照
+  image : varchar(255) 商品图片快照
+  attrs_text : varchar(255) 规格文案快照
+  quantity : int unsigned 数量
+  cur_price : decimal(10, 2) 当前单价
+  real_pay : decimal(10, 2) 实付单价
+  total_money : decimal(10, 2) 小计金额
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "order_logistics" as order_logistics {
+  *f_id : varchar(50) 主键
+  +order_id : varchar(50) 订单ID
+  company_name : varchar(64) 物流公司名称
+  logistics_no : varchar(64) 物流单号
+  company_tel : varchar(32) 物流联系电话
+  trace_count : int unsigned 轨迹数量
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "order_logistics_trace" as order_logistics_trace {
+  *f_id : varchar(50) 主键
+  +logistics_id : varchar(50) 物流主记录ID
+  text : varchar(255) 轨迹文案
+  trace_time : datetime(3) 轨迹时间
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "payment_record" as payment_record {
+  *f_id : varchar(50) 主键
+  +order_id : varchar(50) 订单ID
+  +member_id : varchar(50) 用户ID
+  pay_channel : tinyint unsigned 支付渠道
+  pay_type : tinyint unsigned 支付方式
+  pay_status : tinyint unsigned 支付状态
+  amount : decimal(10, 2) 支付金额
+  out_trade_no : varchar(64) 本系统支付单号
+  transaction_no : varchar(64) 第三方交易流水号
+  pay_time : datetime(3) 支付成功时间
+  callback_time : datetime(3) 回调时间
+  pay_payload : json 支付请求报文
+  callback_payload : json 回调报文
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product" as product {
+  *f_id : varchar(50) 主键
+  +primary_category_id : varchar(50) 一级分类ID
+  +secondary_category_id : varchar(50) 二级分类ID
+  name : varchar(128) 商品名称
+  desc : varchar(255) 商品描述
+  price : decimal(10, 2) 默认展示价格
+  old_price : decimal(10, 2) 原价
+  default_picture : varchar(255) 默认主图
+  status : tinyint unsigned 状态：1上架 2下架
+  brand_name : varchar(64) 品牌名称
+  sales_count : int unsigned 销量
+  comment_count : int unsigned 评论数
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_detail_picture" as product_detail_picture {
+  *f_id : varchar(50) 主键
+  +product_id : varchar(50) 商品ID
+  picture : varchar(255) 详情图片地址
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_detail_property" as product_detail_property {
+  *f_id : varchar(50) 主键
+  +product_id : varchar(50) 商品ID
+  name : varchar(64) 属性名
+  value : varchar(255) 属性值
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_main_picture" as product_main_picture {
+  *f_id : varchar(50) 主键
+  +product_id : varchar(50) 商品ID
+  picture : varchar(255) 主图地址
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_sku" as product_sku {
+  *f_id : varchar(50) 主键
+  +product_id : varchar(50) 商品ID
+  sku_code : varchar(64) SKU编码
+  price : decimal(10, 2) 售价
+  old_price : decimal(10, 2) 原价
+  inventory : int unsigned 库存
+  picture : varchar(255) SKU图片
+  attrs_text : varchar(255) 规格文案快照
+  status : tinyint unsigned 状态：1启用 2停用
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_sku_value" as product_sku_value {
+  *f_id : varchar(50) 主键
+  +product_sku_id : varchar(50) 备注: SKU ID
+  +product_spec_value_id : varchar(50) 规格值ID
+  spec_name : varchar(64) 规格名快照
+  value_name : varchar(64) 规格值快照
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_spec" as product_spec {
+  *f_id : varchar(50) 主键
+  +product_id : varchar(50) 商品ID
+  name : varchar(64) 规格名
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+entity "product_spec_value" as product_spec_value {
+  *f_id : varchar(50) 主键
+  +product_spec_id : varchar(50) 规格组ID
+  name : varchar(64) 规格值名称
+  picture : varchar(255) 规格图片
+  descr : varchar(255) 规格备注
+  sort_order : int 排序
+  f_tenant_id : varchar(50) 租户id
+  f_delete_mark : int 删除标志
+  f_delete_time : datetime 删除时间
+  f_delete_user_id : varchar(50) 删除用户
+  f_version : int 乐观锁
+  f_flow_id : varchar(50) 流程id
+  f_flow_task_id : varchar(50) 流程任务主键
+  f_flow_state : int 流程任务状态
+  f_creator_user_id : varchar(50) 创建用户
+  f_last_modify_user_id : varchar(50) 修改用户
+  f_creator_time : datetime 创建时间
+  f_last_modify_time : datetime 修改时间
+}
+
+category ||--o{ category : parent_id
+category ||--o{ cms_banner : category_id
+category ||--o{ product : primary_category_id
+category ||--o{ product : secondary_category_id
+cms_hot_zone ||--o{ cms_hot_zone_item : hot_zone_id
+member_user ||--o{ cart_item : member_id
+member_user ||--o{ member_address : member_id
+member_user ||--o{ order_info : member_id
+member_user ||--o{ payment_record : member_id
+order_info ||--o{ order_item : order_id
+order_info ||--o{ order_logistics : order_id
+order_info ||--o{ payment_record : order_id
+order_logistics ||--o{ order_logistics_trace : logistics_id
+product ||--o{ cart_item : product_id
+product ||--o{ cms_banner : product_id
+product ||--o{ cms_hot_zone_item : product_id
+product ||--o{ order_item : product_id
+product ||--o{ product_detail_picture : product_id
+product ||--o{ product_detail_property : product_id
+product ||--o{ product_main_picture : product_id
+product ||--o{ product_sku : product_id
+product ||--o{ product_spec : product_id
+product_sku ||--o{ cart_item : sku_id
+product_sku ||--o{ order_item : sku_id
+product_sku ||--o{ product_sku_value : product_sku_id
+product_spec ||--o{ product_spec_value : product_spec_id
+product_spec_value ||--o{ product_sku_value : product_spec_value_id
+@enduml

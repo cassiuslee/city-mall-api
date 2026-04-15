@@ -1,0 +1,37 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: city-mall-api
+  profiles:
+#    dev,preview,prod
+    active: preview
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.citymall.api.module.**.entity
+  global-config:
+    db-config:
+      logic-delete-field: fDeleteMark
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: true
+
+knife4j:
+  enable: true

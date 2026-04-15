@@ -1,0 +1,8 @@
+接口：根据user_id查询用户及关联主体
+方法：GET
+路径：/customer/member-user-info
+入参：userId
+返回：用户 + 主体列表
+类型：多表 join
+
+请先生成DTO及VO我看下，带Knife4j注释
