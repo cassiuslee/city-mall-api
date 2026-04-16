@@ -11,6 +11,10 @@ spring:
     time-zone: Asia/Shanghai
     date-format: yyyy-MM-dd HH:mm:ss
 
+file:
+  resource-base-url: https://resources.eterni.cn
+  annex-prefix: /files/WebAnnexFile/
+
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -35,3 +39,4 @@ sa-token:
 
 knife4j:
   enable: true
+

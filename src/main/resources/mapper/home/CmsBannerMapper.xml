@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.citymall.api.module.home.mapper.CmsBannerMapper">
+
+    <select id="selectBannerList" resultType="com.citymall.api.module.home.vo.HomeBannerVO">
+        SELECT
+            f_id AS id,
+            img_url AS imgUrl,
+            IFNULL(href_url, '') AS hrefUrl,
+            c_type AS type
+        FROM cms_banner
+        WHERE distribution_site = #{distributionSite}
+          AND is_show = 1
+          AND IFNULL(f_delete_mark, 0) = 0
+        ORDER BY f_sort_code ASC, f_creator_time DESC
+    </select>
+
+</mapper>

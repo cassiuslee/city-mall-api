@@ -1,0 +1,26 @@
+CREATE TABLE `cms_banner`  (
+  `f_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `distribution_site` tinyint NOT NULL COMMENT '投放位置：1首页 2分类页',
+  `img_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '图片地址',
+  `href_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转地址',
+  `c_type` tinyint NULL DEFAULT NULL COMMENT '跳转类型',
+  `product_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联商品ID',
+  `category_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联分类ID',
+  `is_show` tinyint NOT NULL COMMENT '是否展示',
+  `f_sort_code` bigint NULL DEFAULT NULL COMMENT '排序码',
+  `f_tenant_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '租户id',
+  `f_delete_mark` int NULL DEFAULT NULL COMMENT '删除标志',
+  `f_delete_time` datetime NULL DEFAULT NULL COMMENT '删除时间',
+  `f_delete_user_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '删除用户',
+  `f_version` int NULL DEFAULT NULL COMMENT '乐观锁',
+  `f_flow_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '流程id',
+  `f_flow_task_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '流程任务主键',
+  `f_flow_state` int NULL DEFAULT NULL COMMENT '流程任务状态',
+  `f_creator_user_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建用户',
+  `f_last_modify_user_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '修改用户',
+  `f_creator_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `f_last_modify_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`f_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '轮播配置表' ROW_FORMAT = DYNAMIC;
+
