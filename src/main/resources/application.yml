@@ -5,7 +5,7 @@ spring:
   application:
     name: city-mall-api
   profiles:
-#    dev,preview,prod
+    #    dev,preview,prod
     active: preview
   jackson:
     time-zone: Asia/Shanghai

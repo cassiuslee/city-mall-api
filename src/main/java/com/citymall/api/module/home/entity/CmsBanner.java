@@ -22,7 +22,7 @@ public class CmsBanner extends BaseEntity {
 
     @Schema(description = "投放位置：1-首页，2-分类页")
     @TableField("distribution_site")
-    private Integer distributionSite;
+    private String distributionSite;
 
     @Schema(description = "图片地址")
     @TableField("img_url")
@@ -34,7 +34,7 @@ public class CmsBanner extends BaseEntity {
 
     @Schema(description = "跳转类型：1-商品，2-分类，3-自定义链接")
     @TableField("c_type")
-    private Integer cType;
+    private String cType;
 
     @Schema(description = "关联商品ID")
     @TableField("product_id")
@@ -46,7 +46,7 @@ public class CmsBanner extends BaseEntity {
 
     @Schema(description = "是否展示：1-是，0-否")
     @TableField("is_show")
-    private Integer isShow;
+    private String isShow;
 
     @Schema(description = "排序码（越小越靠前）")
     @TableField("f_sort_code")

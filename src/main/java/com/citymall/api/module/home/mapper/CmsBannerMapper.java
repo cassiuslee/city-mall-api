@@ -14,5 +14,5 @@ import java.util.List;
 @Mapper
 public interface CmsBannerMapper extends BaseMapper<CmsBanner> {
 
-    List<HomeBannerVO> selectBannerList(@Param("distributionSite") Integer distributionSite);
+    List<HomeBannerVO> selectBannerList(@Param("distributionSite") String distributionSite);
 }

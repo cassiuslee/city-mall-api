@@ -5,6 +5,9 @@ import com.citymall.api.module.home.vo.HomeBannerVO;
 
 import java.util.List;
 
+/**
+ * @author cqkir
+ */
 public interface HomeBannerService {
 
     List<HomeBannerVO> listByDistributionSite(HomeBannerQueryDTO queryDTO);

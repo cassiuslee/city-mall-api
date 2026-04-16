@@ -20,10 +20,10 @@ public class HomeBannerServiceImpl implements HomeBannerService {
     @Override
     public List<HomeBannerVO> listByDistributionSite(HomeBannerQueryDTO queryDTO) {
         Integer distributionSite = queryDTO == null || queryDTO.getDistributionSite() == null
-                ? 1
+                ? Integer.valueOf("1")
                 : queryDTO.getDistributionSite();
 
-        List<HomeBannerVO> list = cmsBannerMapper.selectBannerList(distributionSite);
+        List<HomeBannerVO> list = cmsBannerMapper.selectBannerList(String.valueOf(distributionSite));
         list.forEach(item -> item.setImgUrl(fileUrlUtils.parseFirstUrl(item.getImgUrl())));
         return list;
     }
