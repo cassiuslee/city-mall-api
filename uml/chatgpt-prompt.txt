@@ -10,3 +10,17 @@
 https://github.com/cassiuslee/city-mall-api.git 为项目后端
 https://github.com/cassiuslee/city-mall-h5.git 为项止前端
 你读取下最新代码，我们继续做项目前后端开发
+
+https://github.com/cassiuslee/city-mall-api.git 为项目后端
+https://github.com/cassiuslee/city-mall-h5.git 为项止前端
+你读取下最新代码，其中/customer/member-user-info为查询用户信息接口，数据以些接口返回为准，你重新规划一下上述方案
+
+重新按步聚列出完整可落地代码，带Knife4j注释
+
+我现在需要改造前端my页面
+用户有一个优雅的组件可切换经营主体，你先给出方案
+
+https://github.com/cassiuslee/city-mall-api.git 为项目后端
+https://github.com/cassiuslee/city-mall-h5.git 为项止前端
+其中 goods前缀的表为商品模块，我想设定SKU价格，但价格是关联客户主体，SPU规格，我想有一个价格规则设定表，之后自动生成SKU价格，应该怎么做简单
+
