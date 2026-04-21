@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.citymall.api.module.goods.mapper.GoodsSkuPriceMapper">
+
+    <delete id="deleteBySpuId">
+        delete gsp
+        from goods_sku_price gsp
+                 inner join goods_sku sku on gsp.sku_id = sku.f_id
+        where sku.spu_id = #{spuId}
+    </delete>
+
+    <insert id="batchInsert">
+        insert into goods_sku_price (
+        f_id,
+        rule_id,
+        sku_id,
+        market_type,
+        sale_price,
+        f_create_user_id,
+        f_create_user_name,
+        f_create_time,
+        f_last_modify_user_id,
+        f_last_modify_user_name,
+        f_last_modify_time,
+        f_delete_mark
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.fId},
+            #{item.ruleId},
+            #{item.skuId},
+            #{item.marketType},
+            #{item.salePrice},
+            #{item.fCreateUserId},
+            #{item.fCreateUserName},
+            #{item.fCreateTime},
+            #{item.fLastModifyUserId},
+            #{item.fLastModifyUserName},
+            #{item.fLastModifyTime},
+            #{item.fDeleteMark}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateSalePriceBySkuIdsAndMarketTypes">
+        update goods_sku_price
+        set sale_price = #{salePrice},
+        rule_id = #{ruleId},
+        f_last_modify_time = now()
+        where sku_id in
+        <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+            #{skuId}
+        </foreach>
+        and market_type in
+        <foreach collection="marketTypes" item="marketType" open="(" separator="," close=")">
+            #{marketType}
+        </foreach>
+    </update>
+
+    <select id="selectBySkuIdAndMarketType"
+            resultType="com.citymall.api.module.goods.vo.GoodsSkuPriceVO">
+        select
+            sku_id as skuId,
+            market_type as marketType,
+            sale_price as salePrice
+        from goods_sku_price
+        where (f_delete_mark = 0 or f_delete_mark is null)
+          and sku_id = #{skuId}
+          and market_type = #{marketType}
+        limit 1
+    </select>
+
+</mapper>

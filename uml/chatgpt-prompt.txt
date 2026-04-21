@@ -22,5 +22,6 @@ https://github.com/cassiuslee/city-mall-h5.git 为项止前端
 
 https://github.com/cassiuslee/city-mall-api.git 为项目后端
 https://github.com/cassiuslee/city-mall-h5.git 为项止前端
-其中 goods前缀的表为商品模块，我想设定SKU价格，但价格是关联客户主体，SPU规格，我想有一个价格规则设定表，之后自动生成SKU价格，应该怎么做简单
-
+src/main/resources/db/goods.sql 为商品模块表
+src/main/resources/db/customer.sql 为customer模块表
+你读取分析下代码，然后先给我建立商品模块的方案，之后再完善所需要的接口及服务
