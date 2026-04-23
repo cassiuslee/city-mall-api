@@ -6,15 +6,16 @@
 
     <select id="selectSkuWithOriginalPriceBySpuId"
             resultType="com.citymall.api.module.goods.vo.GoodsSkuBasePriceVO">
-        select
-            sku.f_id as skuId,
-            sku.spu_id as spuId,
-            sku.goods_spec_id as goodsSpecId,
-            sku.sku_code as skuCode,
-            sku.sku_spec_name as skuSpecName,
-            gsr.original_price as originalPrice
+        select sku.f_id           as skuId,
+               sku.spu_id         as spuId,
+               sku.goods_spec_id  as goodsSpecId,
+               sku.sku_code       as skuCode,
+               sku.sku_spec_name  as skuSpecName,
+               gsr.original_price as originalPrice
         from goods_sku sku
-                 left join goods_spec_relation gsr on sku.goods_spec_id = gsr.f_id
+                 left join goods_spec_relation gsr
+                           on sku.spu_id = gsr.spu_id
+                               and sku.goods_spec_id = gsr.f_id
         where (sku.f_delete_mark = 0 or sku.f_delete_mark is null)
           and (gsr.f_delete_mark = 0 or gsr.f_delete_mark is null)
           and sku.spu_id = #{spuId}

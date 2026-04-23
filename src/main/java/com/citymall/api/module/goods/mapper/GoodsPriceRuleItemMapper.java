@@ -23,4 +23,16 @@ public interface GoodsPriceRuleItemMapper extends BaseMapper<GoodsPriceRuleItem>
      * @return 规则项列表
      */
     List<GoodsPriceRuleItem> selectByMarketType(@Param("marketType") String marketType);
+
+    /**
+     * 按 SPU_ID 查询规则项
+     *
+     * 说明：
+     * 1. 直接查规则项，不依赖规则主表
+     * 2. 用于价格生成逻辑
+     *
+     * @param spuId SPU_ID
+     * @return 规则项列表
+     */
+    List<GoodsPriceRuleItem> selectBySpuId(@Param("spuId") String spuId);
 }

@@ -25,4 +25,11 @@ https://github.com/cassiuslee/city-mall-h5.git 为项止前端
 src/main/java/com/citymall/api/common/entity/BaseEntity.java 为基础实体
 src/main/resources/db/goods.sql 为商品模块表
 src/main/resources/db/customer.sql 为customer模块表
-你读取分析下代码，如果新建了客户类型，需要刷新SKU价格，该怎么办，如何最快
+你读取分析下最新代码，现在发送/goods/sku-price/rebuildBySpu，无写操作
+
+价格生成规则:
+goods_spec_id 不为空
+1.规格级，sku_ids 为空，marketType 为空，则生成对应所有spu_id,goods_spec_id的SKU价格
+2.sku级，sku_ids 不为空，marketType 为空，则生成对应spu_id,goods_spec_id的指定sku_id,所有marketType的SKU价格
+3.marketType级，sku_ids 为空，marketType 不为空，则生成对应spu_id,goods_spec_id的指定marketType,所有sku_id的SKU价格
+4.sku与marketType交集sku_ids 不为空，marketType 不为空，则生成对应spu_id,goods_spec_id的指定marketType,指定sku_id的SKU价格
