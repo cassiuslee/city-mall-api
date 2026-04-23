@@ -48,15 +48,20 @@
 
     <select id="selectBySkuIdAndMarketType"
             resultType="com.citymall.api.module.goods.vo.GoodsSkuPriceVO">
-        select
-            sku_id as skuId,
-            market_type as marketType,
-            sale_price as salePrice
+        select sku_id      as skuId,
+               market_type as marketType,
+               sale_price  as salePrice
         from goods_sku_price
         where (f_delete_mark = 0 or f_delete_mark is null)
           and sku_id = #{skuId}
           and market_type = #{marketType}
         limit 1
     </select>
+
+    <delete id="deleteByMarketType">
+        delete
+        from goods_sku_price
+        where market_type = #{marketType}
+    </delete>
 
 </mapper>

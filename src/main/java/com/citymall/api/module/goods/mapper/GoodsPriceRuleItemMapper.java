@@ -7,9 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * @author cqkir
- */
 @Mapper
 public interface GoodsPriceRuleItemMapper extends BaseMapper<GoodsPriceRuleItem> {
 
@@ -18,4 +15,12 @@ public interface GoodsPriceRuleItemMapper extends BaseMapper<GoodsPriceRuleItem>
     int deleteByRuleId(@Param("ruleId") String ruleId);
 
     int batchInsert(@Param("list") List<GoodsPriceRuleItem> list);
+
+    /**
+     * 查询包含某个客户类型的全部规则项
+     *
+     * @param marketType 客户类型编码
+     * @return 规则项列表
+     */
+    List<GoodsPriceRuleItem> selectByMarketType(@Param("marketType") String marketType);
 }

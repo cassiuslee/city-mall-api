@@ -12,14 +12,18 @@ public interface GoodsSkuPriceBuildService {
     /**
      * 按SPU重建SKU价格
      *
-     * 核心逻辑：
-     * 1. 查询SKU + 原价
-     * 2. 查询客户类型
-     * 3. 删除旧价格
-     * 4. 生成默认原价
-     * 5. 按规则覆盖
-     *
      * @param spuId SPU_ID
      */
     void rebuildBySpuId(String spuId);
+
+    /**
+     * 按客户类型重建SKU价格
+     *
+     * 适用场景：
+     * 1. 新增客户类型后补价
+     * 2. 单独刷新某个客户类型下的所有SKU价格
+     *
+     * @param marketType 客户类型编码，对应 market_types.en_code
+     */
+    void rebuildByMarketType(String marketType);
 }

@@ -2,8 +2,8 @@ package com.citymall.api.module.customer.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.citymall.api.module.customer.entity.MarketTypes;
-import com.citymall.api.module.customer.service.MarketTypesService;
-import com.citymall.api.module.customer.mapper.MarketTypesMapper;
+import com.citymall.api.module.customer.service.MarketTypeService;
+import com.citymall.api.module.customer.mapper.MarketTypeMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 * @createDate 2026-04-13 04:25:00
 */
 @Service
-public class MarketTypesServiceImpl extends ServiceImpl<MarketTypesMapper, MarketTypes>
-    implements MarketTypesService{
+public class MarketTypeServiceImpl extends ServiceImpl<MarketTypeMapper, MarketTypes>
+    implements MarketTypeService {
 
 }
 

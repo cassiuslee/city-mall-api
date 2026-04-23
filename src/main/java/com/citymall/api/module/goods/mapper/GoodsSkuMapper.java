@@ -20,4 +20,13 @@ public interface GoodsSkuMapper extends BaseMapper<GoodsSku> {
                                               @Param("goodsSpecId") String goodsSpecId);
 
     List<GoodsSku> selectBySpuId(@Param("spuId") String spuId);
+
+    /**
+     * 查询全部SKU及其当前原价
+     *
+     * 用于按客户类型批量补价
+     *
+     * @return SKU原价列表
+     */
+    List<GoodsSkuBasePriceVO> selectAllSkuWithOriginalPrice();
 }

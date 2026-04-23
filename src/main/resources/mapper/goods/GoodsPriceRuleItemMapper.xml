@@ -43,4 +43,14 @@
         </foreach>
     </insert>
 
+    <select id="selectByMarketType" resultType="com.citymall.api.module.goods.entity.GoodsPriceRuleItem">
+        select *
+        from goods_price_rule_item
+        where (f_delete_mark = 0 or f_delete_mark is null)
+          and market_types is not null
+          and market_types != ''
+          and find_in_set(#{marketType}, market_types)
+        order by f_creator_time
+    </select>
+
 </mapper>
