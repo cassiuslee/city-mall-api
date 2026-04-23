@@ -24,4 +24,5 @@ https://github.com/cassiuslee/city-mall-api.git 为项目后端
 https://github.com/cassiuslee/city-mall-h5.git 为项止前端
 src/main/resources/db/goods.sql 为商品模块表
 src/main/resources/db/customer.sql 为customer模块表
-你读取分析下代码，然后先给我建立商品模块的方案，之后再完善所需要的接口及服务
+你读取分析下代码，确认一下这一步是否复杂了，goods_price_rule与goods_price_rule_item表，
+我是在其它项目接口创建存储数据，本项目只负责读取，我需要一个接口传入spuId,然后按规则生成goods_sku_price数据
