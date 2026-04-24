@@ -161,7 +161,7 @@ CREATE TABLE `goods_sku`  (
   `sku_pic` json NULL COMMENT 'SKU图片',
   `sku_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '状态：0下架 1外部上架 2内部上架',
   `not_show_types` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '不可见客户类型',
-  `sku_full_name` varchar(255) NULL COMMENT 'SKU名称',
+  `sku_full_attr` varchar(255) NULL COMMENT 'SKU规格属性',
   `sku_type` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'SKU类型',
   `f_tenant_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '租户id',
   `f_delete_mark` int NULL DEFAULT NULL COMMENT '删除标志',
