@@ -9,16 +9,37 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * SKU Mapper
+ *
  * @author cqkir
  */
 @Mapper
 public interface GoodsSkuMapper extends BaseMapper<GoodsSku> {
 
+    /**
+     * 按SPU查询SKU及当前原价
+     *
+     * @param spuId SPU_ID
+     * @return SKU原价列表
+     */
     List<GoodsSkuBasePriceVO> selectSkuWithOriginalPriceBySpuId(@Param("spuId") String spuId);
 
+    /**
+     * 按SPU + 规格ID查询SKU_ID列表
+     *
+     * @param spuId SPU_ID
+     * @param goodsSpecId 规格ID
+     * @return SKU_ID列表
+     */
     List<String> selectSkuIdsBySpuIdAndSpecId(@Param("spuId") String spuId,
                                               @Param("goodsSpecId") String goodsSpecId);
 
+    /**
+     * 按SPU查询SKU列表
+     *
+     * @param spuId SPU_ID
+     * @return SKU列表
+     */
     List<GoodsSku> selectBySpuId(@Param("spuId") String spuId);
 
     /**
@@ -29,4 +50,15 @@ public interface GoodsSkuMapper extends BaseMapper<GoodsSku> {
      * @return SKU原价列表
      */
     List<GoodsSkuBasePriceVO> selectAllSkuWithOriginalPrice();
+
+    /**
+     * 按SKU_ID查询单个SKU及当前原价
+     *
+     * 原价来自 goods_spec_relation.original_price。
+     * 这里用于“只重建单个SKU价格”。
+     *
+     * @param skuId SKU_ID
+     * @return SKU基础价格信息
+     */
+    GoodsSkuBasePriceVO selectSkuWithOriginalPriceBySkuId(@Param("skuId") String skuId);
 }

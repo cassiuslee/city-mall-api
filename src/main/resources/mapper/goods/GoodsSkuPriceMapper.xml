@@ -64,4 +64,17 @@
         where market_type = #{marketType}
     </delete>
 
+    <!--
+    按SKU_ID删除历史价格
+
+    说明：
+    单个SKU重建前，先删除该SKU所有客户类型下的旧价格，
+    后面再重新生成默认原价，再按规则覆盖。
+-->
+    <delete id="deleteBySkuId">
+        delete
+        from goods_sku_price
+        where sku_id = #{skuId}
+    </delete>
+
 </mapper>

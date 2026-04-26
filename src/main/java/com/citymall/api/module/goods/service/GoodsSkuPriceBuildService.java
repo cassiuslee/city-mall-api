@@ -26,4 +26,16 @@ public interface GoodsSkuPriceBuildService {
      * @param marketType 客户类型编码，对应 market_types.en_code
      */
     void rebuildByMarketType(String marketType);
+
+    /**
+     * 按SKU重建SKU价格
+     *
+     * 适用场景：
+     * 1. 新增 / 修改某个SKU后，只刷新该SKU价格
+     * 2. 修改某个SKU对应规格后，只刷新该SKU价格
+     * 3. 不想按整个SPU重建，减少影响范围
+     *
+     * @param skuId SKU_ID
+     */
+    void rebuildBySkuId(String skuId);
 }

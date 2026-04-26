@@ -25,7 +25,7 @@ https://github.com/cassiuslee/city-mall-h5.git 为项止前端
 src/main/java/com/citymall/api/common/entity/BaseEntity.java 为基础实体
 src/main/resources/db/goods.sql 为商品模块表
 src/main/resources/db/customer.sql 为customer模块表
-你读取分析下最新代码，再查找未能更新的问题
+你读取分析下最新代码，我需要一个传入skuId后更新sku价格的服务
 
 价格生成规则:
 goods_spec_id 不为空

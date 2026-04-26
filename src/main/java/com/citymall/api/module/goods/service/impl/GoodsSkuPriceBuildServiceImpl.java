@@ -297,6 +297,188 @@ public class GoodsSkuPriceBuildServiceImpl implements GoodsSkuPriceBuildService 
     }
 
     /**
+     * 按SKU重建SKU价格
+     * <p>
+     * 核心流程：
+     * 1. 根据 skuId 查询 SKU + 当前原价
+     * 2. 查询全部有效客户类型
+     * 3. 删除该 skuId 旧价格
+     * 4. 先为该 skuId 的每个客户类型生成默认原价
+     * 5. 查询该 SKU 所属 SPU 的价格规则
+     * 6. 只处理能命中当前 skuId 的规则
+     * 7. 按规则优先级覆盖价格
+     *
+     * @param skuId SKU_ID
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void rebuildBySkuId(String skuId) {
+        log.info("开始按SKU重建SKU价格, skuId={}", skuId);
+
+        // 1. 参数基础校验
+        if (skuId == null || skuId.isBlank()) {
+            log.warn("skuId为空，无法重建SKU价格");
+            return;
+        }
+
+        // 2. 查询当前SKU及其原价
+        // 原价来自 goods_spec_relation.original_price
+        GoodsSkuBasePriceVO sku = goodsSkuMapper.selectSkuWithOriginalPriceBySkuId(skuId);
+        if (sku == null) {
+            log.warn("未查询到SKU或SKU已删除, skuId={}", skuId);
+            return;
+        }
+
+        // 3. 查询全部有效客户类型
+        // 每个SKU需要为每个客户类型生成一条价格
+        List<String> allMarketTypes = marketTypeMapper.selectAllEnabledEnCode();
+        if (allMarketTypes == null || allMarketTypes.isEmpty()) {
+            log.warn("未查询到客户类型，无法生成SKU价格, skuId={}", skuId);
+            return;
+        }
+
+        // 4. 删除该SKU历史价格
+        // 防止重复生成，也避免旧规则残留
+        int deleteRows = goodsSkuPriceMapper.deleteBySkuId(skuId);
+        log.info("已删除SKU历史价格, skuId={}, deleteRows={}", skuId, deleteRows);
+
+        // 5. 先按原价生成默认价格
+        // 即：不命中任何规则时，也能有价格数据
+        List<GoodsSkuPrice> insertList = new ArrayList<>();
+        for (String marketType : allMarketTypes) {
+            GoodsSkuPrice po = new GoodsSkuPrice();
+
+            // 主键使用项目现有雪花ID工具
+            po.setFId(IdGenerator.nextIdStr());
+
+            // 默认原价不是规则生成，所以 ruleId 为空
+            po.setRuleId(null);
+
+            po.setSkuId(skuId);
+            po.setMarketType(marketType);
+
+            // 默认销售价 = 当前规格原价
+            po.setSalePrice(sku.getOriginalPrice());
+
+            // 未删除
+            po.setFDeleteMark(0);
+
+            insertList.add(po);
+        }
+
+        if (!insertList.isEmpty()) {
+            int insertRows = goodsSkuPriceMapper.batchInsert(insertList);
+            log.info("SKU默认价格生成完成, skuId={}, insertRows={}", skuId, insertRows);
+        }
+
+        // 6. 查询当前SKU所属SPU下的全部价格规则项
+        // 因为规则是按SPU维度配置的，所以单SKU刷新时仍然查询该SPU规则
+        List<GoodsPriceRuleItem> items = goodsPriceRuleItemMapper.selectBySpuId(sku.getSpuId());
+        if (items == null || items.isEmpty()) {
+            log.info("当前SKU所属SPU无价格规则，仅使用原价, skuId={}, spuId={}", skuId, sku.getSpuId());
+            return;
+        }
+
+        // 7. 按规则优先级排序
+        // 当前已有规则：
+        // 1 规格级
+        // 2 marketType级
+        // 3 SKU级
+        // 4 SKU + marketType交集级
+        //
+        // 后面的规则会覆盖前面的规则，所以交集级优先级最高
+        items.sort(Comparator.comparingInt(this::ruleOrder));
+
+        // 8. 逐条规则尝试覆盖当前SKU价格
+        for (GoodsPriceRuleItem item : items) {
+            log.info("处理SKU价格规则: skuId={}, ruleItemId={}, goodsSpecId={}, skuIds={}, marketTypes={}, salePrice={}",
+                    skuId,
+                    item.getFId(),
+                    item.getGoodsSpecId(),
+                    item.getSkuIds(),
+                    item.getMarketTypes(),
+                    item.getSalePrice());
+
+            // 8.1 规则必须有 goodsSpecId
+            // 因为当前规则体系是先定位规格，再定位SKU / 客户类型
+            if (item.getGoodsSpecId() == null || item.getGoodsSpecId().isBlank()) {
+                log.warn("规则缺少 goodsSpecId，已跳过, ruleItemId={}", item.getFId());
+                continue;
+            }
+
+            // 8.2 当前规则规格必须等于当前SKU规格
+            // 否则说明规则不属于这个SKU
+            if (!item.getGoodsSpecId().equals(sku.getGoodsSpecId())) {
+                log.info("规则规格不匹配当前SKU，已跳过, skuId={}, skuGoodsSpecId={}, ruleGoodsSpecId={}, ruleItemId={}",
+                        skuId,
+                        sku.getGoodsSpecId(),
+                        item.getGoodsSpecId(),
+                        item.getFId());
+                continue;
+            }
+
+            // 8.3 解析规则中的 sku_ids 和 market_types
+            // split() 已兼容：
+            // 1. 普通逗号字符串：1,2,3
+            // 2. 单值字符串：1
+            // 3. JSON数组字符串：["1","2"]
+            List<String> targetSkuIds = split(item.getSkuIds());
+            List<String> targetMarketTypes = split(item.getMarketTypes());
+
+            boolean skuEmpty = targetSkuIds.isEmpty();
+            boolean marketEmpty = targetMarketTypes.isEmpty();
+
+            // 8.4 如果规则指定了 sku_ids，则必须包含当前 skuId
+            // 如果 sku_ids 为空，则表示规格级 / marketType级规则，可作用于当前规格下全部SKU
+            if (!skuEmpty && !targetSkuIds.contains(skuId)) {
+                log.info("规则指定了SKU但未命中当前SKU，已跳过, skuId={}, targetSkuIds={}, ruleItemId={}",
+                        skuId,
+                        targetSkuIds,
+                        item.getFId());
+                continue;
+            }
+
+            // 8.5 计算最终要覆盖的客户类型
+            List<String> finalMarketTypes;
+
+            if (marketEmpty) {
+                // market_types 为空：表示覆盖全部客户类型
+                finalMarketTypes = allMarketTypes;
+            } else {
+                // market_types 不为空：只覆盖规则中指定，且系统中有效的客户类型
+                finalMarketTypes = allMarketTypes.stream()
+                        .filter(targetMarketTypes::contains)
+                        .toList();
+            }
+
+            if (finalMarketTypes.isEmpty()) {
+                log.warn("规则未命中任何有效客户类型，已跳过, ruleItemId={}, targetMarketTypes={}",
+                        item.getFId(),
+                        targetMarketTypes);
+                continue;
+            }
+
+            // 8.6 覆盖价格
+            // 当前只重建一个SKU，所以 skuIds 只传 singletonList(skuId)
+            int updateRows = goodsSkuPriceMapper.updateSalePriceBySkuIdsAndMarketTypes(
+                    Collections.singletonList(skuId),
+                    finalMarketTypes,
+                    item.getSalePrice(),
+                    item.getGoodsRuleId()
+            );
+
+            log.info("SKU价格规则覆盖完成: skuId={}, ruleItemId={}, marketCount={}, salePrice={}, updateRows={}",
+                    skuId,
+                    item.getFId(),
+                    finalMarketTypes.size(),
+                    item.getSalePrice(),
+                    updateRows);
+        }
+
+        log.info("按SKU重建SKU价格完成, skuId={}", skuId);
+    }
+
+    /**
      * 字符串转列表
      * 兼容：
      * 1. 普通逗号字符串：1,2,3
