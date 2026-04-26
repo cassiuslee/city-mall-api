@@ -38,6 +38,14 @@
         order by f_creator_time desc
     </select>
 
+    <select id="countBySpuIdAndSkuSpecName" resultType="int">
+        select count(1)
+        from goods_sku
+        where (f_delete_mark = 0 or f_delete_mark is null)
+          and spu_id = #{spuId}
+          and sku_spec_name = #{skuSpecName}
+    </select>
+
     <select id="selectAllSkuWithOriginalPrice"
             resultType="com.citymall.api.module.goods.vo.GoodsSkuBasePriceVO">
         select sku.f_id           as skuId,

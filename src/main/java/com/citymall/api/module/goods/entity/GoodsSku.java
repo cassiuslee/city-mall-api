@@ -44,6 +44,10 @@ public class GoodsSku extends BaseEntity {
     @Schema(description = "SKU规格名称")
     private String skuSpecName;
 
+    @TableField("sku_pic")
+    @Schema(description = "SKU图片（JSON）")
+    private String skuPic;
+
     @TableField("sku_status")
     @Schema(description = "SKU状态")
     private String skuStatus;
@@ -52,9 +56,9 @@ public class GoodsSku extends BaseEntity {
     @Schema(description = "不可见客户类型（en_code逗号分隔）")
     private String notShowTypes;
 
-    @TableField("sku_full_name")
-    @Schema(description = "SKU全名")
-    private String skuFullName;
+    @TableField("sku_full_attr")
+    @Schema(description = "SKU规格属性")
+    private String skuFullAttr;
 
     @TableField("sku_type")
     @Schema(description = "SKU类型")
