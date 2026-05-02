@@ -3,6 +3,9 @@ package com.citymall.api.module.customer.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author cqkir
  */
@@ -48,4 +51,7 @@ public class MarketEntityVO {
 
     @Schema(description = "客服经理ID")
     private String serviceManager;
+
+    @Schema(description = "人员权限编码列表")
+    private List<String> permissions = new ArrayList<>();
 }
