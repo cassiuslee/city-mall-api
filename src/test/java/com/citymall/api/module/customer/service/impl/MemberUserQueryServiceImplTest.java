@@ -57,6 +57,7 @@ class MemberUserQueryServiceImplTest {
         row1.setSalesCompanyId("SC001");
         row1.setRegionalManagerId("RM001");
         row1.setServiceManager("SM001");
+        row1.setIdentityPermissions("[\"1\",\"2\"]");
 
         MemberUserInfoRowVO row2 = new MemberUserInfoRowVO();
         row2.setFId("U001");
@@ -79,6 +80,7 @@ class MemberUserQueryServiceImplTest {
         row2.setSalesCompanyId("SC002");
         row2.setRegionalManagerId("RM002");
         row2.setServiceManager("SM002");
+        row2.setIdentityPermissions("[\"4\",\"6\"]");
 
         when(memberUserMapper.selectMemberUserInfoByUserId(queryDTO))
                 .thenReturn(List.of(row1, row2));
@@ -93,6 +95,8 @@ class MemberUserQueryServiceImplTest {
         assertEquals(2, result.getMarkets().size());
         assertEquals("重庆经营主体", result.getMarkets().get(0).getMarkName());
         assertEquals("成都经营主体", result.getMarkets().get(1).getMarkName());
+        assertEquals(List.of("1", "2"), result.getMarkets().get(0).getPermissions());
+        assertEquals(List.of("4", "6"), result.getMarkets().get(1).getPermissions());
     }
 
     @Test
@@ -117,6 +121,25 @@ class MemberUserQueryServiceImplTest {
         MemberUserInfoVO result = memberUserQueryService.getMemberUserInfoByUserId(queryDTO);
 
         assertEquals(1, result.getMarkets().size());
+    }
+
+    @Test
+    void should_return_empty_permissions_when_identity_permissions_is_blank() {
+        MemberUserInfoRowVO row = new MemberUserInfoRowVO();
+        row.setFId("U001");
+        row.setUserId("zhangsan");
+        row.setRelationId("R001");
+        row.setMarketFid("M001");
+        row.setMarkName("重庆经营主体");
+        row.setIdentityPermissions(" ");
+
+        when(memberUserMapper.selectMemberUserInfoByUserId(queryDTO))
+                .thenReturn(List.of(row));
+
+        MemberUserInfoVO result = memberUserQueryService.getMemberUserInfoByUserId(queryDTO);
+
+        assertNotNull(result.getMarkets().get(0).getPermissions());
+        assertTrue(result.getMarkets().get(0).getPermissions().isEmpty());
     }
 
     @Test

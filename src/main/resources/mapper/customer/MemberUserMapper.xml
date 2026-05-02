@@ -20,6 +20,7 @@
                r.f_id                AS relationId,
                r.market_fid          AS marketFid,
                r.member_identity     AS memberIdentity,
+               i.identity_permissions AS identityPermissions,
 
                m.c_status            AS marketCStatus,
                m.mark_code           AS markCode,
@@ -35,6 +36,9 @@
                  LEFT JOIN member_relation r
                            ON r.member_fid = u.f_id
                                AND (r.f_delete_mark = 0 OR r.f_delete_mark IS NULL)
+                 LEFT JOIN member_identity i
+                           ON i.identity_code = r.member_identity
+                               AND (i.f_delete_mark = 0 OR i.f_delete_mark IS NULL)
                  LEFT JOIN market_entity_info m
                            ON m.f_id = r.market_fid
                                AND (m.f_delete_mark = 0 OR m.f_delete_mark IS NULL)

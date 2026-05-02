@@ -46,6 +46,9 @@ public class MemberUserInfoRowVO {
     @Schema(description = "用户身份")
     private String memberIdentity;
 
+    @Schema(description = "身份权限JSON")
+    private String identityPermissions;
+
     @Schema(description = "主体状态")
     private String marketCStatus;
 

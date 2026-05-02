@@ -7,10 +7,15 @@ import com.citymall.api.module.customer.service.MemberUserQueryService;
 import com.citymall.api.module.customer.vo.MarketEntityVO;
 import com.citymall.api.module.customer.vo.MemberUserInfoRowVO;
 import com.citymall.api.module.customer.vo.MemberUserInfoVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +25,11 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class MemberUserQueryServiceImpl implements MemberUserQueryService {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private static final TypeReference<List<String>> STRING_LIST_TYPE = new TypeReference<>() {
+    };
 
     private final MemberUserMapper memberUserMapper;
 
@@ -74,6 +84,7 @@ public class MemberUserQueryServiceImpl implements MemberUserQueryService {
             market.setSalesCompanyId(row.getSalesCompanyId());
             market.setRegionalManagerId(row.getRegionalManagerId());
             market.setServiceManager(row.getServiceManager());
+            market.setPermissions(parsePermissions(row.getIdentityPermissions()));
 
             result.getMarkets().add(market);
         }
@@ -85,5 +96,21 @@ public class MemberUserQueryServiceImpl implements MemberUserQueryService {
         String relationId = row.getRelationId() == null ? "" : row.getRelationId();
         String marketFid = row.getMarketFid() == null ? "" : row.getMarketFid();
         return relationId + "_" + marketFid;
+    }
+
+    private List<String> parsePermissions(String identityPermissions) {
+        if (identityPermissions == null || identityPermissions.isBlank()) {
+            return new ArrayList<>();
+        }
+
+        try {
+            List<String> permissions = OBJECT_MAPPER.readValue(identityPermissions, STRING_LIST_TYPE);
+            if (permissions == null || permissions.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return new ArrayList<>(new LinkedHashSet<>(permissions));
+        } catch (JsonProcessingException ex) {
+            return new ArrayList<>();
+        }
     }
 }
